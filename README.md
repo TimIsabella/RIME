@@ -1,139 +1,62 @@
-# RIME: Reflexive Identity Modulation Engine
+# RIME: Recursive Integrative Meaning Engine
 
-A lightweight, self-evolving logic engine for multi-frame reasoning, contradiction resolution, and adaptive belief modeling.
+RIME is a self-evolving, frame-based logic engine that models reasoning through contradiction, adaptation, and abstraction — without relying on static axioms or fixed truths. It supports:
 
----
-
-## 🧠 What is RIME?
-
-**RIME** is a lightweight, self-contained cognitive architecture designed for developing agents that can model, evolve, and revise their own belief structures over time. Built as a frame-based recursive system, RIME enables:
-
-- Reflexive self-evaluation
-- Contradiction detection and resolution
-- Multiple co-existing frames (worldviews)
-- Memory of prior belief states
-- Goal-driven reasoning and adaptive modulation
-
-Originally developed from the **Recursive Reflexive Logic Engine**, RIME introduces a modular frame system, introspective scheduling, and narrative identity tracking — all optimized for conventional hardware.
+- Reflexive contradiction handling
+- Frame switching based on coherence
+- Meta-abstraction from pattern repetition
+- Temporal memory of belief evolution
+- CSV-based input/output for full transparency
 
 ---
 
 ## 🔧 Features
 
-- 🧩 **Frames:** Self-contained belief systems with local axioms, weights, and contradiction buffers
-- 🔁 **Reflexive Adaptation:** Contradiction triggers belief revision and trust updates
-- 🧠 **Meta-Frame Management:** Multiple worldviews compared, swapped, and merged dynamically
-- 🎯 **Goal-Driven Evolution:** Aligns with a configurable system-level purpose
-- 🧠 **Narrative Memory:** Tracks belief changes over time for introspective agents
-- ⚡ **Low Compute Overhead:** Runs efficiently on standard desktops/laptops
+- 📚 **Logic Frames**: Each frame holds its own axioms and evolves independently.
+- 🔁 **Contradiction-Driven Adaptation**: Contradictions trigger structural updates.
+- 🧠 **Meta-Abstraction**: Recurring contradictions are abstracted into higher-order concepts.
+- 📜 **Temporal Memory**: All events (inputs, contradictions, adaptations) are tracked over time.
+- 🔍 **Meta-Frame Monitoring**: Observes all frames to determine contextually coherent switches.
 
-## 🧪 Example Output
-```text
-Input P0: Accepted
-Introspection triggered.
-{'active_frame': 'default', 'axioms': ['P0'], 'contradictions': [], 'history': []}
-Input P1: Accepted
-Input Q: Contradicted
-Input P2: Accepted
-...
+---
+
+## 📁 File Structure
+
 ```
-
-## ⚙️ Customization
-
-### Modify Goal Function
-Change how frames are scored by modifying the `goal_fn`:
-```python
-def simple_goal_fn(frame):
-    return len(frame.axioms) - len(frame.contradiction_buffer)
-```
-
-### Add New Frames
-You can create multiple frames with different rules:
-```python
-fm.create_frame("scientific", my_custom_goal_fn)
-fm.create_frame("intuitive", another_goal_fn)
+rime/
+├── RIME_module.py          # Main logic engine
+├── RIME_graph.py           # Graph-based visualizer
+├── frame_a_axioms.csv      # Initial axioms for Frame A
+├── frame_b_axioms.csv      # Initial axioms for Frame B
+├── input_stream.csv        # Input stream for RIME
+├── Frame_A_axioms.csv      # Output: evolved axioms for Frame A
+├── Frame_B_axioms.csv      # Output: evolved axioms for Frame B
+├── Frame_A_events.csv      # Output: event log for Frame A
+├── Frame_B_events.csv      # Output: event log for Frame B
+├── meta_event_log.csv      # Output: global event timeline
+├── meta_abstract_patterns.csv # Output: abstracted patterns
 ```
 
 ---
 
-## ⏱️ Adjusting System Speed
+## 🚀 Getting Started
 
-You can control RIME's tempo and computational load by modifying the following values directly in `reflexive_logic_module.py`:
-
-### 🔁 Introspection Frequency
-Controls how often the system checks frame performance and possibly switches frames.
-
-**Find this block in the main loop:**
-```python
-if i % 5 == 0:  # Run introspection every 5 prompts
-    fm.introspect()
+### 2. Install Requirements
+```bash
+pip install pandas networkx matplotlib
 ```
-**Adjust `5` to a higher number (e.g., `10`) to slow down introspection**, or lower it (e.g., `1` or `2`) for faster frame switching.
 
----
-
-### 🧠 Contradiction Buffer Size
-Determines how many unresolved contradictions are held before triggering frame adaptation.
-
-**In `Frame.__init__`:**
-```python
-self.contradiction_buffer = deque(maxlen=100)
+### 3. Run RIME Engine
+```bash
+python RIME_module.py
 ```
-**Increase `maxlen`** to make the system more tolerant and slower to adapt. **Reduce** it for a faster, more reactive agent.
+This will process your `input_stream.csv` using logic from the provided `frame_a_axioms.csv` and `frame_b_axioms.csv`. Outputs will be saved alongside the script.
 
----
-
-### ⚠️ Contradiction Threshold for Adaptation
-Controls how sensitive a frame is to contradiction.
-
-**In `Frame.adapt()`:**
-```python
-if len(self.contradiction_buffer) > 10:
+### 4. Visualize the Results
+```bash
+python RIME_graph.py
 ```
-**Increase `10`** for slower adaptation, or **decrease** it (e.g., `3–5`) to trigger quicker restructuring.
-
----
-
-### 🎯 Goal Function Sensitivity
-Affects how frames are scored and compared during introspection.
-
-**In `simple_goal_fn(frame)`:**
-```python
-def simple_goal_fn(frame):
-    return len(frame.axioms) - len(frame.contradiction_buffer)
-```
-You can make it more aggressive by increasing the weight of contradictions or rewarding certain axioms.
-
----
-
-### 🧵 Optional: Background Introspection Loop
-To simulate a "thinking agent" that introspects on a timed interval, you can run this in a thread:
-
-```python
-import threading
-
-def background_introspect(fm, interval=10):
-    while True:
-        time.sleep(interval)
-        fm.introspect()
-        print("[Background] Introspection triggered.")
-
-threading.Thread(target=background_introspect, args=(fm,), daemon=True).start()
-```
-This keeps introspection active without relying on prompt counts and is ideal for more advanced agents.
-
-
-You can control RIME's tempo and computational load using these settings:
-
-| Setting                       | Slower System                         | Faster System                          |
-|------------------------------|----------------------------------------|----------------------------------------|
-| `i % X` introspection rate   | Higher `X` (e.g. 10)                   | Lower `X` (e.g. 1–2)                   |
-| Contradiction buffer size    | Larger (100–200)                      | Smaller (10–30)                        |
-| Contradiction threshold      | Higher (20+)                          | Lower (3–10)                           |
-| Goal function sensitivity    | Mild penalty on contradiction         | Heavy penalty, frequent switching      |
-| Frame comparison frequency   | Rare introspection                    | Frequent or time-based introspection   |
-
-You can also implement background or time-based introspection to simulate continuous thinking while keeping CPU usage low.
+This will generate a graph of the reasoning process using `networkx` and `matplotlib`.
 
 ---
 
@@ -164,6 +87,8 @@ https://www.linkedin.com/in/timisabella
 
 ---
 
+
 ## 🧠 Philosophy
 
-"Truth is not a fixed point. It is a structure in motion — stable within frames, but relative across them. Contradiction is not failure, but the signal to adapt."
+RIME is not a model of truth — it's a model of belief adaptation. It does not assume correctness. It builds coherence by interacting with contradiction.
+> "Truth is not what is imposed — it is what survives contradiction."
