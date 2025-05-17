@@ -3,8 +3,12 @@ RIME: Recursive Integrative Meaning Engine
 CSV-Compatible Python Module with Reflexive Logic, Frame Switching, Meta-Abstraction, and Temporal Memory
 """
 
+"""
+RIME: Recursive Integrative Meaning Engine
+Now supports CSV input and output
+"""
+
 import pandas as pd
-import os
 from collections import defaultdict
 
 class Frame:
@@ -38,6 +42,9 @@ class Frame:
             self.events.append((tick, "adapted", recent))
             self.contradictions.clear()
 
+    def score(self):
+        return len(self.axioms) - len(self.contradictions)
+
 class MetaFrameManager:
     def __init__(self):
         self.frames = {}
@@ -46,10 +53,8 @@ class MetaFrameManager:
         self.event_log = []
         self.tick = 0
 
-    def add_frame(self, name, axioms):
-        frame = Frame(name)
-        frame.axioms.update(axioms)
-        self.frames[name] = frame
+    def add_frame(self, name):
+        self.frames[name] = Frame(name)
         if not self.active_frame:
             self.active_frame = name
 
@@ -60,6 +65,8 @@ class MetaFrameManager:
 
         for name, frame in self.frames.items():
             accepted = frame.evaluate(self.tick, input_)
+            if not accepted:
+                frame.contradictions.add(input_)
             frame.adapt(self.tick)
             if input_ in frame.axioms:
                 self.meta_abstract_patterns[input_] += 1
@@ -74,7 +81,7 @@ class MetaFrameManager:
             self.active_frame = best_frame
 
     def summarize(self):
-        return {
+        summary = {
             "active_frame": self.active_frame,
             "frames": {
                 name: {
@@ -87,36 +94,43 @@ class MetaFrameManager:
             "meta_patterns": {k: v for k, v in self.meta_abstract_patterns.items() if v >= 2},
             "event_log": self.event_log
         }
+        return summary
 
-    def export_to_csv(self, output_dir):
-        os.makedirs(output_dir, exist_ok=True)
-        for name, frame in self.frames.items():
-            pd.DataFrame({"axioms": list(frame.axioms)}).to_csv(os.path.join(output_dir, f"{name}_axioms.csv"), index=False)
-            pd.DataFrame({"contradictions": list(frame.contradictions)}).to_csv(os.path.join(output_dir, f"{name}_contradictions.csv"), index=False)
-            pd.DataFrame(frame.events, columns=["tick", "event", "input"]).to_csv(os.path.join(output_dir, f"{name}_events.csv"), index=False)
-        pd.DataFrame(self.event_log, columns=["tick", "event", "target"]).to_csv(os.path.join(output_dir, "meta_event_log.csv"), index=False)
-        pd.DataFrame(list(self.meta_abstract_patterns.items()), columns=["pattern", "count"]).to_csv(os.path.join(output_dir, "meta_abstract_patterns.csv"), index=False)
+    def export_to_csv(self, summary_path, events_path):
+        summary = self.summarize()
+        records = []
+        for name, frame in summary["frames"].items():
+            for ax in frame["axioms"]:
+                records.append({"frame": name, "type": "axiom", "value": ax})
+            for con in frame["contradictions"]:
+                records.append({"frame": name, "type": "contradiction", "value": con})
 
-# Run RIME using CSV files
+        df_summary = pd.DataFrame(records)
+        df_summary.to_csv(summary_path, index=False)
+
+        events = []
+        for tick, kind, detail in summary["event_log"]:
+            events.append({"tick": tick, "event": kind, "detail": detail})
+        df_events = pd.DataFrame(events)
+        df_events.to_csv(events_path, index=False)
+
+# Execution with CSV I/O
 if __name__ == "__main__":
-    base_path = os.path.dirname(os.path.abspath(__file__))
+    INPUT_CSV = "INPUT_seed_data.csv"
+    OUTPUT_SUMMARY = "OUTPUT_rime_summary.csv"
+    OUTPUT_EVENTS = "OUTPUT_rime_events.csv"
 
     rime = MetaFrameManager()
+    rime.add_frame("Frame_A")
+    rime.add_frame("Frame_B")
 
-    # Load initial frame axioms
-    frame_a_axioms = pd.read_csv(os.path.join(base_path, "frame_a_axioms.csv"))["axioms"].tolist()
-    frame_b_axioms = pd.read_csv(os.path.join(base_path, "frame_b_axioms.csv"))["axioms"].tolist()
-    rime.add_frame("Frame_A", frame_a_axioms)
-    rime.add_frame("Frame_B", frame_b_axioms)
+    for i in range(5):
+        rime.frames["Frame_A"].axioms.add(f"P{i}")
+        rime.frames["Frame_B"].axioms.add(f"Q{i}")
 
-    # Load input stream
-    input_stream = pd.read_csv(os.path.join(base_path, "input_stream.csv"))["input"].tolist()
-    for input_ in input_stream:
+    df_inputs = pd.read_csv(INPUT_CSV)
+    for input_ in df_inputs["input"]:
         rime.process_input(input_)
 
-    # Export results to same directory
-    rime.export_to_csv(base_path)
-
-    from pprint import pprint
-    pprint(rime.summarize())
+    rime.export_to_csv(OUTPUT_SUMMARY, OUTPUT_EVENTS)
 
