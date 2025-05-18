@@ -16,15 +16,13 @@ class Frame:
         self.tick = 0
 
     def evaluate(self, tick, input_):
-        accepted = False
-        if not self.axioms:
-            self.axioms.add(input_)
+        if input_ in self.axioms:
             accepted = True
-        elif input_ in self.axioms:
-            accepted = True
+            self.trust[input_] = min(1.0, self.trust[input_] + 0.1)  # reinforce belief
         else:
+            accepted = False
             self.contradictions.append((tick, input_))
-            self.trust[input_] -= 0.1
+            self.trust[input_] = max(0.0, self.trust[input_] - 0.1)  # decay trust
 
         self.events.append({
             'tick': tick,
