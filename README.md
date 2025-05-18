@@ -1,62 +1,77 @@
-# RIME: Recursive Integrative Meaning Engine
+# Recursive Integrated Meaning Engine (RIME)
 
-RIME is a self-evolving, frame-based logic engine that models reasoning through contradiction, adaptation, and abstraction — without relying on static axioms or fixed truths. It supports:
-
-- Reflexive contradiction handling
-- Frame switching based on coherence
-- Meta-abstraction from pattern repetition
-- Temporal memory of belief evolution
-- CSV-based input/output for full transparency
+**RIME** is an adaptive, self-evolving reasoning architecture that models nested frames of belief, logic, and contradiction. It is designed to grow organically by evaluating streams of input and recursively restructuring itself to form higher-order meaning.
 
 ---
 
-## 🔧 Features
+## 📦 Project Structure
 
-- 📚 **Logic Frames**: Each frame holds its own axioms and evolves independently.
-- 🔁 **Contradiction-Driven Adaptation**: Contradictions trigger structural updates.
-- 🧠 **Meta-Abstraction**: Recurring contradictions are abstracted into higher-order concepts.
-- 📜 **Temporal Memory**: All events (inputs, contradictions, adaptations) are tracked over time.
-- 🔍 **Meta-Frame Monitoring**: Observes all frames to determine contextually coherent switches.
-
----
-
-## 📁 File Structure
-
-```
-rime/
-├── RIME_module.py          # Main logic engine
-├── RIME_graph.py           # Graph-based visualizer
-├── frame_a_axioms.csv      # Initial axioms for Frame A
-├── frame_b_axioms.csv      # Initial axioms for Frame B
-├── input_stream.csv        # Input stream for RIME
-├── Frame_A_axioms.csv      # Output: evolved axioms for Frame A
-├── Frame_B_axioms.csv      # Output: evolved axioms for Frame B
-├── Frame_A_events.csv      # Output: event log for Frame A
-├── Frame_B_events.csv      # Output: event log for Frame B
-├── meta_event_log.csv      # Output: global event timeline
-├── meta_abstract_patterns.csv # Output: abstracted patterns
-```
+| File/Folder                | Description                                                                                                     |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `RIME_frame_module.py`                  | Self-contained module for a single Frame. Tracks axioms, contradictions, and adapts over time.     |
+| `RIME_frame_manager_module.py`          | MetaFrameManager that evaluates and coordinates all Frames. Maintains global memory and evolution. |
+| `RIME_frame_manager_graph_module.py`    | Visualizes the interaction between frames and tracks switching behavior.                           |
+| `RIME_frame_graphs.py`                  | Visualizes the internal state of each Frame (axioms, contradictions, adaptation history).          |
+| `rime_state.json`                       | Persistent memory of all frames and global evolution across cycles.                                |
+| `INPUT_data.csv`                        | Input pattern stream for RIME to process.                                                          |
+| `OUTPUT_rime_summary.csv`               | Output summary of axioms and contradictions across all frames.                                     |
+| `OUTPUT_rime_events.csv`                | Log of global events like frame switching and adaptation.                                          |
 
 ---
 
-## 🚀 Getting Started
+## 🔁 How It Works
 
-### 2. Install Requirements
-```bash
-pip install pandas networkx matplotlib
-```
+1. **Inputs** are read from `INPUT_data.csv`
+2. **Frames** evaluate these inputs based on their current axioms.
+3. **Contradictions** cause frames to adapt and evolve.
+4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
+5. **State** is persisted to `rime_state.json` after every run.
+6. **Outputs** are written to CSV files for analysis and auditability.
 
-### 3. Run RIME Engine
-```bash
-python RIME_module.py
-```
-This will process your `input_stream.csv` using logic from the provided `frame_a_axioms.csv` and `frame_b_axioms.csv`. Outputs will be saved alongside the script.
+---
 
-### 4. Visualize the Results
+## 🧠 Core Concepts
+
+### 🧱 Frame (Local Unit)
+
+* Maintains its own logic (axioms).
+* Adapts when contradictions accumulate.
+* Learns by recursively restructuring based on input patterns.
+
+### 🧠 MetaFrameManager (Global Coordinator)
+
+* Selects active frame based on lowest contradiction.
+* Spawns new frames when existing ones don't fit.
+* Tracks long-term abstract patterns and system events.
+
+---
+
+## 📊 Output Files
+
+| File                            | Purpose                                |
+| ------------------------------- | -------------------------------------- |
+| `OUTPUT_<frame_id>_summary.csv` | Per-frame axioms and contradictions.   |
+| `OUTPUT_<frame_id>_events.csv`  | Input evaluation trace for the frame.  |
+| `OUTPUT_rime_summary.csv`       | Combined summary of all frames.        |
+| `OUTPUT_rime_events.csv`        | Frame switches and global adaptations. |
+
+---
+
+## 📌 Notes
+
+* Designed to be fully cross-platform.
+* Uses only local files, no external dependencies beyond standard Python + matplotlib + networkx.
+* Extensible to real-time input streams or symbolic abstraction layers.
+
+---
+
+## 📥 Dependencies
+
+Install required libraries:
+
 ```bash
-python RIME_graph.py
+pip install matplotlib networkx
 ```
-This will generate a graph of the reasoning process using `networkx` and `matplotlib`.
 
 ---
 
