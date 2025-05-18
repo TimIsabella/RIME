@@ -4,6 +4,7 @@ import os
 import uuid
 from RIME_frame_module import Frame
 from collections import defaultdict
+from itertools import combinations
 
 class MetaFrameManager:
     def __init__(self, state_file='rime_state.json'):
@@ -20,6 +21,39 @@ class MetaFrameManager:
         frame_id = name or str(uuid.uuid4())
         self.frames[frame_id] = Frame(frame_id=frame_id)
         return frame_id
+
+    def merge_frames(self, frame_id1, frame_id2):
+        f1 = self.frames[frame_id1]
+        f2 = self.frames[frame_id2]
+
+        # Merge axioms, trust, contradictions, etc.
+        merged_frame = Frame()
+        merged_frame.axioms = f1.axioms.union(f2.axioms)
+
+        merged_frame.trust = defaultdict(lambda: 1.0, {**f1.trust, **f2.trust})
+        for k in f1.trust:
+            if k in f2.trust:
+                merged_frame.trust[k] = (f1.trust[k] + f2.trust[k]) / 2
+
+        merged_frame.contradictions = f1.contradictions + f2.contradictions
+        merged_frame.history = f1.history + f2.history
+        merged_frame.events = f1.events + f2.events
+
+        # Remove old frames and add merged frame
+        del self.frames[frame_id1]
+        del self.frames[frame_id2]
+        self.frames[merged_frame.frame_id] = merged_frame
+
+        self.event_log.append({
+            'tick': self.tick,
+            'event': 'frames_merged',
+            'from': [frame_id1, frame_id2],
+            'to': merged_frame.frame_id
+        })
+
+        # Update active frame if needed
+        if self.active_frame in [frame_id1, frame_id2]:
+            self.active_frame = merged_frame.frame_id
 
     def process_input(self, input_):
         if not self.frames:
@@ -57,8 +91,27 @@ class MetaFrameManager:
             })
             self.active_frame = best_frame
 
+        self.merge_similar_frames()
+
         self.tick += 1
         self.processed_index += 1
+
+    def merge_similar_frames(self, threshold=0.8):
+        merged = set()
+        for fid1, fid2 in combinations(self.frames.keys(), 2):
+            if fid1 in merged or fid2 in merged:
+                continue
+            a1 = self.frames[fid1].axioms
+            a2 = self.frames[fid2].axioms
+            intersection = len(a1.intersection(a2))
+            union = len(a1.union(a2))
+            if union == 0:
+                continue
+            similarity = intersection / union
+            if similarity >= threshold:
+                self.merge_frames(fid1, fid2)
+                merged.update([fid1, fid2])
+                break  # Restart merging loop for safety
 
     def summarize(self):
         summary = {
