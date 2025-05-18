@@ -50,7 +50,7 @@
 
 * Selects active frame based on lowest contradiction.
 * Spawns new frames when existing ones don't fit.
-* Collapses frames when they become too similar to another (the more unique frame is retained).
+* Merges frames when they become too similar.
 * Tracks long-term abstract patterns and system events.
 
 ---
