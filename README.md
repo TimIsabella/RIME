@@ -2,6 +2,12 @@
 
 **RIME** is an adaptive, self-evolving reasoning architecture that models nested frames of belief, logic, and contradiction. It is designed to grow organically by evaluating streams of input and recursively restructuring itself to form higher-order meaning.
 
+![Frame Manager Graph](frameManagerGraph.png)
+
+![Frame Graph](frameGraph.png)
+
+![Unified Graph](unifiedGraph.png)
+
 ---
 
 ## 📦 Project Structure
