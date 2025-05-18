@@ -16,8 +16,9 @@
 | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `RIME_frame_module.py`                  | Self-contained module for a single Frame. Tracks axioms, contradictions, and adapts over time.     |
 | `RIME_frame_manager_module.py`          | MetaFrameManager that evaluates and coordinates all Frames. Maintains global memory and evolution. |
-| `RIME_frame_manager_graph_module.py`    | Visualizes the interaction between frames and tracks switching behavior.                           |
-| `RIME_frame_graphs.py`                  | Visualizes the internal state of each Frame (axioms, contradictions, adaptation history).          |
+| `RIME_frame_manager_graph.py`           | Visualizes the interaction between frames and tracks switching behavior.                           |
+| `RIME_frame_graph.py`                   | Visualizes the internal state of each Frame (axioms, contradictions, adaptation history).          |
+| `RIME_unified_graph.py`                 | Visualizes both frame interactions and their internal state.                                       |
 | `rime_state.json`                       | Persistent memory of all frames and global evolution across cycles.                                |
 | `INPUT_data.csv`                        | Input pattern stream for RIME to process.                                                          |
 | `OUTPUT_rime_summary.csv`               | Output summary of axioms and contradictions across all frames.                                     |
@@ -34,7 +35,7 @@
 5. **State** is persisted to `rime_state.json` after every run.
 6. **Outputs** are written to CSV files for analysis and auditability.
 7. Input can be run indefinately without needing to retain past inputs.
-8. Can be run and trained in realtime.
+8. Can be run and trained in real-time.
 
 ---
 
