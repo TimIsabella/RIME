@@ -42,11 +42,16 @@ def build_combined_graph(state):
         elif event['event'] == 'frame_created':
             new_f = f"FRAME:{event['new_frame'][:6]}"
             G.add_node(new_f, type='frame', color='skyblue')
+        elif event['event'] == 'frames_merged':
+            merged_to = f"FRAME:{event['to'][:6]}"
+            for fid in event['from']:
+                merged_from = f"FRAME:{fid[:6]}"
+                G.add_edge(merged_from, merged_to, label=f"merged@{event['tick']}", color='purple')
 
     return G
 
 def draw_combined_graph(G, state):
-    pos = nx.circular_layout(G)
+    pos = nx.spring_layout(G, seed=42)
     node_colors = [data.get('color', 'gray') for _, data in G.nodes(data=True)]
 
     plt.figure(figsize=(18, 12))
