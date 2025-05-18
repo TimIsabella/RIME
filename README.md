@@ -12,8 +12,8 @@
 
 ## 📦 Project Structure
 
-| File/Folder                | Description                                                                                                     |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| File/Folder                             | Description                                                                                        |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `RIME_frame_module.py`                  | Self-contained module for a single Frame. Tracks axioms, contradictions, and adapts over time.     |
 | `RIME_frame_manager_module.py`          | MetaFrameManager that evaluates and coordinates all Frames. Maintains global memory and evolution. |
 | `RIME_frame_manager_graph_module.py`    | Visualizes the interaction between frames and tracks switching behavior.                           |
@@ -33,6 +33,9 @@
 4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
 5. **State** is persisted to `rime_state.json` after every run.
 6. **Outputs** are written to CSV files for analysis and auditability.
+7. Input can be run indefinately without needing to retain past input.
+8. New input must be a higher row number than the previous input for it to be accepted.
+9. Frames are collapsed when they become too similar to another (the more unique frame is retained).
 
 ---
 
