@@ -33,9 +33,8 @@
 4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
 5. **State** is persisted to `rime_state.json` after every run.
 6. **Outputs** are written to CSV files for analysis and auditability.
-7. Input can be run indefinately without needing to retain past input.
+7. Input can be run indefinately without needing to retain past input (could be run in realtime with minimal modification).
 8. New input must be a higher row number than the previous input for it to be accepted.
-9. Frames are collapsed when they become too similar to another (the more unique frame is retained).
 
 ---
 
@@ -51,6 +50,7 @@
 
 * Selects active frame based on lowest contradiction.
 * Spawns new frames when existing ones don't fit.
+* Collapses frames when they become too similar to another (the more unique frame is retained).
 * Tracks long-term abstract patterns and system events.
 
 ---
