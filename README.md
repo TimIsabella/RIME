@@ -55,6 +55,82 @@
 
 ---
 
+## 🔧 Architecture Overview
+
+### 🧱 Individual Frame Unit
+
+Each **Frame** is an isolated logical entity that:
+
+* Accumulates and revises **axioms** (truths).
+* Tracks **contradictions** and **trust** in inputs.
+* Evolves autonomously through **adaptation**.
+
+#### Frame Components
+
+| Component        | Description                                           |
+| ---------------- | ----------------------------------------------------- |
+| `axioms`         | Current accepted truths or beliefs.                   |
+| `trust`          | Confidence weights for input patterns.                |
+| `contradictions` | Inputs recently found to be inconsistent with axioms. |
+| `history`        | Log of structural changes (e.g. adaptation events).   |
+| `events`         | Timeline of all evaluations (accept/reject outcomes). |
+
+#### Frame Functions
+
+| Function     | Description                                                           |
+| ------------ | --------------------------------------------------------------------- |
+| `evaluate()` | Tests an input against axioms, adjusts trust, logs result.            |
+| `adapt()`    | Converts contradictions into new axioms when a threshold is exceeded. |
+| `score()`    | Returns the frame's fitness as `axioms - contradictions`.             |
+
+#### Frame Behavior
+
+* First two inputs define the notion of consistency.
+* Contradictions can later become accepted truths via `adapt()`.
+* Trust decays for frequently contradicted inputs.
+
+---
+
+### 🧠 MetaFrameManager — Parent Orchestrator
+
+The **MetaFrameManager** oversees all frames, routes inputs, selects active reasoning paths, and stores global memory.
+
+#### Manager Components
+
+| Component                | Description                                                   |
+| ------------------------ | ------------------------------------------------------------- |
+| `frames`                 | Dictionary of all Frame instances.                            |
+| `active_frame`           | Currently best-fit frame based on contradiction minimization. |
+| `meta_abstract_patterns` | Tracks frequently adapted patterns for abstraction.           |
+| `event_log`              | Global log of frame switches and system-level events.         |
+| `tick`                   | Global time counter.                                          |
+| `processed_index`        | Index of last processed input from the input stream.          |
+
+#### Manager Functions
+
+| Function                        | Description                                                       |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `add_frame()`                   | Adds a new frame dynamically as needed.                           |
+| `process_input()`               | Evaluates input across all frames, creates new ones if necessary. |
+| `summarize()`                   | Outputs a full state snapshot (scores, patterns, events).         |
+| `export_to_csv()`               | Writes axioms, contradictions, and events to disk.                |
+| `save_state()` / `load_state()` | Maintains full continuity via `rime_state.json`.                  |
+
+---
+
+## 🔁 Stateful Evolution
+
+| File                            | Purpose                                                   |
+| ------------------------------- | --------------------------------------------------------- |
+| `INPUT_data.csv`                | Stream of input patterns.                                 |
+| `rime_state.json`               | Persistent memory of all frames and global manager state. |
+| `OUTPUT_rime_summary.csv`       | Per-frame axioms and contradictions.                      |
+| `OUTPUT_rime_events.csv`        | High-level system events (frame switches, adaptations).   |
+| `OUTPUT_<frame_id>_summary.csv` | Axioms/contradictions for individual frame.               |
+| `OUTPUT_<frame_id>_events.csv`  | Evaluation trace for individual frame.                    |
+
+---
+
 ## 📊 Output Files
 
 | File                            | Purpose                                |
