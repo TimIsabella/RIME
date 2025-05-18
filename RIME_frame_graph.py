@@ -39,7 +39,7 @@ def draw_all_internal_graphs(state):
     for idx, (frame_id, frame_data) in enumerate(state['frames'].items()):
         G = build_internal_graph(frame_id, frame_data)
         colors = [data['color'] for _, data in G.nodes(data=True)]
-        pos = nx.spring_layout(G, seed=42)
+        pos = nx.shell_layout(G)
 
         ax = axes[idx]
         ax.set_title(f"Frame {frame_id[:6]}")

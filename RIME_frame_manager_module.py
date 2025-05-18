@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 from RIME_frame_module import Frame
+from collections import defaultdict
 
 class MetaFrameManager:
     def __init__(self, state_file='rime_state.json'):
