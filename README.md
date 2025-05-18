@@ -25,7 +25,7 @@
 
 ---
 
-## 🔁 How It Works
+## 🔁 Important Aspects
 
 1. **Inputs** are read from `INPUT_data.csv`
 2. **Frames** evaluate these inputs based on their current axioms.
@@ -33,8 +33,8 @@
 4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
 5. **State** is persisted to `rime_state.json` after every run.
 6. **Outputs** are written to CSV files for analysis and auditability.
-7. Input can be run indefinately without needing to retain past input (could be run in realtime with minimal modification).
-8. New input must be a higher row number than the previous input for it to be accepted.
+7. Input can be run indefinately without needing to retain past inputs.
+8. Can be run and trained in realtime.
 
 ---
 
@@ -43,7 +43,7 @@
 ### 🧱 Frame (Local Unit)
 
 * Maintains its own logic (axioms).
-* Adapts when contradictions accumulate.
+* Adapts by contradiction or confirmation accumulation.
 * Learns by recursively restructuring based on input patterns.
 
 ### 🧠 MetaFrameManager (Global Coordinator)
@@ -115,6 +115,7 @@ The **MetaFrameManager** oversees all frames, routes inputs, selects active reas
 | `summarize()`                   | Outputs a full state snapshot (scores, patterns, events).         |
 | `export_to_csv()`               | Writes axioms, contradictions, and events to disk.                |
 | `save_state()` / `load_state()` | Maintains full continuity via `rime_state.json`.                  |
+| `merge_similar_frames()`        | Merges frames when they become too similar.                       |
 
 ---
 
