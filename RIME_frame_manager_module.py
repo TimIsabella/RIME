@@ -17,44 +17,6 @@ class MetaFrameManager:
         self.state_file = state_file
         self.load_state()
 
-    def add_frame(self, name=None):
-        frame_id = name or str(uuid.uuid4())
-        self.frames[frame_id] = Frame(frame_id=frame_id)
-        return frame_id
-
-    def merge_frames(self, frame_id1, frame_id2):
-        f1 = self.frames[frame_id1]
-        f2 = self.frames[frame_id2]
-
-        # Merge axioms, trust, contradictions, etc.
-        merged_frame = Frame()
-        merged_frame.axioms = f1.axioms.union(f2.axioms)
-
-        merged_frame.trust = defaultdict(lambda: 1.0, {**f1.trust, **f2.trust})
-        for k in f1.trust:
-            if k in f2.trust:
-                merged_frame.trust[k] = (f1.trust[k] + f2.trust[k]) / 2
-
-        merged_frame.contradictions = f1.contradictions + f2.contradictions
-        merged_frame.history = f1.history + f2.history
-        merged_frame.events = f1.events + f2.events
-
-        # Remove old frames and add merged frame
-        del self.frames[frame_id1]
-        del self.frames[frame_id2]
-        self.frames[merged_frame.frame_id] = merged_frame
-
-        self.event_log.append({
-            'tick': self.tick,
-            'event': 'frames_merged',
-            'from': [frame_id1, frame_id2],
-            'to': merged_frame.frame_id
-        })
-
-        # Update active frame if needed
-        if self.active_frame in [frame_id1, frame_id2]:
-            self.active_frame = merged_frame.frame_id
-
     def process_input(self, input_):
         if not self.frames:
             self.active_frame = self.add_frame()
@@ -94,7 +56,46 @@ class MetaFrameManager:
         self.merge_similar_frames()
 
         self.tick += 1
+        self.prune_frames()
         self.processed_index += 1
+
+    def add_frame(self, name=None):
+        frame_id = name or str(uuid.uuid4())
+        self.frames[frame_id] = Frame(frame_id=frame_id)
+        return frame_id
+
+    def merge_frames(self, frame_id1, frame_id2):
+        f1 = self.frames[frame_id1]
+        f2 = self.frames[frame_id2]
+
+        # Merge axioms, trust, contradictions, etc.
+        merged_frame = Frame()
+        merged_frame.axioms = f1.axioms.union(f2.axioms)
+
+        merged_frame.trust = defaultdict(lambda: 1.0, {**f1.trust, **f2.trust})
+        for k in f1.trust:
+            if k in f2.trust:
+                merged_frame.trust[k] = (f1.trust[k] + f2.trust[k]) / 2
+
+        merged_frame.contradictions = f1.contradictions + f2.contradictions
+        merged_frame.history = f1.history + f2.history
+        merged_frame.events = f1.events + f2.events
+
+        # Remove old frames and add merged frame
+        del self.frames[frame_id1]
+        del self.frames[frame_id2]
+        self.frames[merged_frame.frame_id] = merged_frame
+
+        self.event_log.append({
+            'tick': self.tick,
+            'event': 'frames_merged',
+            'from': [frame_id1, frame_id2],
+            'to': merged_frame.frame_id
+        })
+
+        # Update active frame if needed
+        if self.active_frame in [frame_id1, frame_id2]:
+            self.active_frame = merged_frame.frame_id
 
     def merge_similar_frames(self, threshold=0.8):
         merged = set()
@@ -122,6 +123,30 @@ class MetaFrameManager:
             'event_log': self.event_log
         }
         return summary
+
+    def should_prune(self, frame, base=50, scale=2, min_score=-5):
+        inactivity = self.tick - frame.last_active_tick
+        size = len(frame.axioms)
+        decay_limit = base + size * scale
+        return frame.score() <= min_score and inactivity > decay_limit
+
+    def prune_frames(self):
+        to_delete = []
+        for fid, frame in self.frames.items():
+            if self.should_prune(frame):
+                to_delete.append(fid)
+
+        for fid in to_delete:
+            del self.frames[fid]
+            self.event_log.append({
+                'tick': self.tick,
+                'event': 'frame_pruned',
+                'from': fid
+            })
+
+        # Update active frame if needed
+        if self.active_frame in to_delete:
+            self.active_frame = next(iter(self.frames), None)
 
     def export_to_csv(self):
         summary_path = os.path.join(os.getcwd(), 'OUTPUT_rime_summary.csv')

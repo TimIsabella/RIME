@@ -14,15 +14,22 @@ class Frame:
         self.events = []
         self.threshold = threshold
         self.tick = 0
+        self.last_active_tick = 0  # Track last time the frame changed
 
     def evaluate(self, tick, input_):
         if input_ in self.axioms:
             accepted = True
-            self.trust[input_] = min(1.0, self.trust[input_] + 0.1)  # reinforce belief
+            new_trust = min(1.0, self.trust[input_] + 0.1)
+            if new_trust != self.trust[input_]:
+                self.last_active_tick = tick
+            self.trust[input_] = new_trust
         else:
             accepted = False
             self.contradictions.append((tick, input_))
-            self.trust[input_] = max(0.0, self.trust[input_] - 0.1)  # decay trust
+            new_trust = max(0.0, self.trust[input_] - 0.1)
+            if new_trust != self.trust[input_]:
+                self.last_active_tick = tick
+            self.trust[input_] = new_trust
 
         self.events.append({
             'tick': tick,
@@ -41,6 +48,7 @@ class Frame:
                 'new_axioms': recent_inputs
             })
             self.contradictions = []
+            self.last_active_tick = tick
 
     def score(self):
         return len(self.axioms) - len(self.contradictions)
