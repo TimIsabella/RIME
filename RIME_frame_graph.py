@@ -3,6 +3,10 @@ import json
 import matplotlib.pyplot as plt
 import networkx as nx
 
+import matplotlib
+matplotlib.rcParams['font.family'] = 'Arial'
+
+
 def load_rime_state(state_file='rime_state.json'):
     if not os.path.exists(state_file):
         raise FileNotFoundError("State file not found.")
@@ -13,19 +17,25 @@ def load_rime_state(state_file='rime_state.json'):
 def build_internal_graph(frame_id, frame_data):
     G = nx.DiGraph()
 
+    def ensure_node(label, color):
+        if not G.has_node(label):
+            G.add_node(label, color=color)
+
     for axiom in frame_data['axioms']:
-        G.add_node(f"AX:{axiom}", color='green')
+        ensure_node(f"AX:{axiom}", 'green')
 
     for tick, contradiction in frame_data['contradictions']:
-        G.add_node(f"CT:{contradiction}", color='red')
+        ensure_node(f"CT:{contradiction}", 'red')
+        ensure_node(f"AX:{contradiction}", 'green')  # in case added only via contradiction
         G.add_edge(f"CT:{contradiction}", f"AX:{contradiction}", label=f"resolved@{tick}")
 
     for change in frame_data['history']:
         if change['action'] == 'adapt':
             for ax in change['new_axioms']:
-                G.add_node(f"AX:{ax}", color='green')
-                G.add_edge(f"change@{change['tick']}", f"AX:{ax}", label='adapted')
-                G.add_node(f"change@{change['tick']}", color='blue')
+                ensure_node(f"AX:{ax}", 'green')
+                tick_node = f"change@{change['tick']}"
+                ensure_node(tick_node, 'blue')
+                G.add_edge(tick_node, f"AX:{ax}", label='adapted')
 
     return G
 
