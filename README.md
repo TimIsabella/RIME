@@ -10,6 +10,24 @@
 
 ---
 
+## 🔍 AI Challenges Solved by This Architecture
+
+This system addresses foundational limitations in traditional AI through a modular, adaptive, contradiction-driven reasoning engine.
+
+| **Challenge**                   | **Traditional AI Struggles With...**     | **RIME's Approach**                                        |
+|------------------------------|-------------------------------------------|--------------------------------------------------------------|
+| **Symbolic Brittleness**     | Crashes or halts when contradictions arise | Absorbs contradictions into adaptive belief structures      |
+| **Grounding Problem**        | Symbols lack real-world experiential link  | Builds truth empirically through repeated input patterns    |
+| **Catastrophic Forgetting**  | Overwrites old knowledge with new          | Isolates beliefs in evolving, competing frames              |
+| **Training Data Bias**       | Locked into initial dataset assumptions    | Continuously learns from new, live data                     |
+| **Black-box Inference**      | Decisions lack transparency                | Traceable logic with trust scores and contradiction history |
+| **Single-model Fragility**   | One-model failures cause total breakdown   | Maintains multiple competing, mergeable belief frames       |
+| **Closed-world Assumption**  | Fails on unseen or unknown inputs          | Welcomes novelty; defines truth through persistence         |
+
+> 💡 Truth is not imposed — it emerges through tension with experience.
+
+---
+
 ## 📦 Project Structure
 
 | File/Folder                             | Description                                                                                        |
