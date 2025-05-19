@@ -1,6 +1,8 @@
-# Recursive Integrated Meaning Engine (RIME)
+# RIME: Recursive Inference Model Engine
 
-**RIME** is an adaptive, self-evolving reasoning architecture that models nested frames of belief, logic, and contradiction. It is designed to grow organically by evaluating streams of input and recursively restructuring itself to form higher-order meaning.
+**RIME** is an adaptive, self-evolving reasoning architecture designed to model nested frames of belief, contradiction, and adaptation. Unlike traditional AI systems, RIME does not start with a fixed definition of truth—it constructs its belief system from the bottom up, through repeated interaction with data and persistent contradictions.
+
+> Truth is not defined from the top-down, but earned from the bottom-up through contradiction and adaptation.
 
 ![Frame Manager Graph](frameManagerGraph.png)
 
@@ -28,32 +30,24 @@ This system addresses foundational limitations in traditional AI through a modul
 
 ---
 
-## 📦 Project Structure
+## 🚀 Features
 
-| File/Folder                             | Description                                                                                        |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `RIME_frame_module.py`                  | Self-contained module for a single Frame. Tracks axioms, contradictions, and adapts over time.     |
-| `RIME_frame_manager_module.py`          | MetaFrameManager that evaluates and coordinates all Frames. Maintains global memory and evolution. |
-| `RIME_frame_manager_graph.py`           | Visualizes the interaction between frames and tracks switching behavior.                           |
-| `RIME_frame_graph.py`                   | Visualizes the internal state of each Frame (axioms, contradictions, adaptation history).          |
-| `RIME_unified_graph.py`                 | Visualizes both frame interactions and their internal state.                                       |
-| `rime_state.json`                       | Persistent memory of all frames and global evolution across cycles.                                |
-| `INPUT_data.csv`                        | Input pattern stream for RIME to process.                                                          |
-| `OUTPUT_rime_summary.csv`               | Output summary of axioms and contradictions across all frames.                                     |
-| `OUTPUT_rime_events.csv`                | Log of global events like frame switching and adaptation.                                          |
+- **Contradiction-Driven Adaptation**: Frames learn by identifying and incorporating repeated contradictions.
+- **Multi-Frame Reasoning**: Competing frames allow different belief systems to coexist and evolve.
+- **Frame Merging & Pruning**: Redundant or weak frames are merged or discarded automatically.
+- **Trust-Based Logic**: Inputs raise or lower their trust value over time, influencing belief formation.
+- **Persistent State**: System state is saved to and restored from disk using JSON.
+- **Full Audit Trail**: Every change is recorded for traceability and explanation.
 
 ---
 
-## 🔁 Important Aspects
+## 🔬 Use Cases
 
-1. **Inputs** are read from `INPUT_data.csv`
-2. **Frames** evaluate these inputs based on their current axioms.
-3. **Contradictions** cause frames to adapt and evolve.
-4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
-5. **State** is persisted to `rime_state.json` after every run.
-6. **Outputs** are written to CSV files for analysis and auditability.
-7. Input can be run indefinately without needing to retain past inputs.
-8. Can be run and trained in real-time.
+- Epistemic AI / Synthetic cognition
+- Belief modeling and contradiction resolution
+- Adaptive, context-aware decision engines
+- Simulations of social or scientific belief evolution
+- Open-world learning systems
 
 ---
 
@@ -159,6 +153,35 @@ The **MetaFrameManager** oversees all frames, routes inputs, selects active reas
 | `OUTPUT_<frame_id>_events.csv`  | Input evaluation trace for the frame.  |
 | `OUTPUT_rime_summary.csv`       | Combined summary of all frames.        |
 | `OUTPUT_rime_events.csv`        | Frame switches and global adaptations. |
+
+---
+
+## 📦 Project Structure
+
+| File/Folder                             | Description                                                                                        |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `RIME_frame_module.py`                  | Self-contained module for a single Frame. Tracks axioms, contradictions, and adapts over time.     |
+| `RIME_frame_manager_module.py`          | MetaFrameManager that evaluates and coordinates all Frames. Maintains global memory and evolution. |
+| `RIME_frame_manager_graph.py`           | Visualizes the interaction between frames and tracks switching behavior.                           |
+| `RIME_frame_graph.py`                   | Visualizes the internal state of each Frame (axioms, contradictions, adaptation history).          |
+| `RIME_unified_graph.py`                 | Visualizes both frame interactions and their internal state.                                       |
+| `rime_state.json`                       | Persistent memory of all frames and global evolution across cycles.                                |
+| `INPUT_data.csv`                        | Input pattern stream for RIME to process.                                                          |
+| `OUTPUT_rime_summary.csv`               | Output summary of axioms and contradictions across all frames.                                     |
+| `OUTPUT_rime_events.csv`                | Log of global events like frame switching and adaptation.                                          |
+
+---
+
+## 🔁 Important Aspects
+
+1. **Inputs** are read from `INPUT_data.csv`
+2. **Frames** evaluate these inputs based on their current axioms.
+3. **Contradictions** cause frames to adapt and evolve.
+4. **MetaFrameManager** tracks the best-fit frame and manages transitions.
+5. **State** is persisted to `rime_state.json` after every run.
+6. **Outputs** are written to CSV files for analysis and auditability.
+7. Input can be run indefinately without needing to retain past inputs.
+8. Can be run and trained in real-time.
 
 ---
 
